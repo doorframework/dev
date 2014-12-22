@@ -807,6 +807,23 @@ class GeneratorTable extends Table{
 			$nativeType = $converter->getNativeType($converter->getMappedType($column));		
 			$writer->write(" * @param {$nativeType} \${$name} $comment");			            
         }		
+		
+        foreach ($this->getAllForeignKeys() as $foreign) {
+            if ($this->isForeignKeyIgnored($foreign)) {
+                continue;
+            }
+
+			$localColumns = $foreign->getLocalColumns();
+			if(count($localColumns) != 1)
+			{
+				continue;
+			}
+			
+			$propertyName = preg_replace('/_[^_]*$/', "", $localColumns[1]);
+			
+            $targetEntity = "\\".implode("\\", $foreign->getReferencedTable()->getFullClassNameAsArray());			
+			$writer->write(" * @param {$targetEntity} \${$propertyName}");           
+        }		
 	}
 	
 	public function writeInitModel(Writer $writer)
@@ -832,6 +849,8 @@ class GeneratorTable extends Table{
 				'type' => $nativeType
 			);
         }				
+		
+		
 		
 		return $return_value;
 	}
