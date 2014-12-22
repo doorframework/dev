@@ -819,7 +819,7 @@ class GeneratorTable extends Table{
 				continue;
 			}
 			
-			$propertyName = preg_replace('/_[^_]*$/', "", $localColumns[1]);
+			$propertyName = preg_replace('/_[^_]*$/', "", $localColumns[0]);
 			
             $targetEntity = "\\".implode("\\", $foreign->getReferencedTable()->getFullClassNameAsArray());			
 			$writer->write(" * @param {$targetEntity} \${$propertyName}");           
