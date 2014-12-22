@@ -806,15 +806,33 @@ class GeneratorTable extends Table{
 			$comment = trim($column->getComment());
 			$nativeType = $converter->getNativeType($converter->getMappedType($column));		
 			$writer->write(" * @param {$nativeType} \${$name}");			            
-			$writer->write($comment);
+			$writer->writeIf($comment, $comment);
         }		
 	}
 	
 	public function writeInitModel(Writer $writer)
 	{
-		$writer->indent();
-		$writer->write('$this->_table_columns = array();');
+		$writer->indent();						
+		$table_columns = var_export($this->getTableColumnsArray(), true);		
+		$writer->write("$this->_table_columns = {$table_columns};");
 		$writer->outdent();
+	}
+	
+	public function getTableColumnsArray()
+	{
+		$return_value = array();
+		
+        foreach ($this->getColumns() as $column) {
+			/* @var $column MwbExporter\Model\Column */
+			$name = $column->getName();
+			$nativeType = $converter->getNativeType($converter->getMappedType($column));		
+			$return_value[$name] = array(
+				'name' => $name,
+				'type' => $nativeType
+			);
+        }				
+		
+		return $return_value;
 	}
 		
 }
