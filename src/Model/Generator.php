@@ -6,6 +6,7 @@
  * and open the template in the editor.
  */
 namespace Door\Dev\Model;
+use \MwbExporter\Formatter\Doctrine2\Annotation\Formatter;
 /**
  * Description of Generator
  *
@@ -52,7 +53,29 @@ class Generator {
 	
 	public function generate()
 	{
-		
+		$bootstrap = new \MwbExporter\Bootstrap();
+
+		$formatter = new GeneratorFormatter();
+		$formatter->setup(array(
+			Formatter::CFG_ADD_COMMENT => false,
+			Formatter::CFG_GENERATE_EXTENDABLE_ENTITY => true,
+			Formatter::CFG_BACKUP_FILE => false,
+			Formatter::CFG_ENTITY_NAMESPACE => $this->namespace,
+			Formatter::CFG_AUTOMATIC_REPOSITORY => true,
+			Formatter::CFG_SKIP_GETTER_SETTER => false,
+			Formatter::CFG_GENERATE_ENTITY_SERIALIZATION => true
+		));
+
+		$document = $bootstrap->export($formatter, $this->mwb_filename, $this->basedir);
+
+		if($document == null)
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}		
 	}
 	
 }
