@@ -54,11 +54,11 @@ class GeneratorTable extends Table{
             })
             ->write('/**')
             ->write(' * '.$this->getModelName())
-            ->write(' *')
-			->write(' */')
+            ->write(' *')			
             ->writeCallback(function(WriterInterface $writer, GeneratorTable $_this = null) {
                 $_this->writePropertiesComments($writer);
             })
+			->write(' */')
             ->write('class '.$this->getClassName() . " extends ". $this->getExtendedClass())
             ->write('{')
             ->indent()
