@@ -123,9 +123,7 @@ class GeneratorTable extends Table{
      */
     protected function getOrmUse()
     {
-        if ('@ORM\\' === $this->addPrefix()) {
-            return 'Doctrine\ORM\Mapping as ORM';
-        }
+		return '';
     }
 
     /**
