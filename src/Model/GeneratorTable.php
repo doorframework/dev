@@ -805,7 +805,8 @@ class GeneratorTable extends Table{
 			$name = $column->getName();
 			$comment = trim($column->getComment());
 			$nativeType = $converter->getNativeType($converter->getMappedType($column));		
-			$writer->write(" * @param {$nativeType} \${$name} {$comment}");			            
+			$writer->write(" * @param {$nativeType} \${$name}");			            
+			$writer->write($comment);
         }		
 	}
 	
