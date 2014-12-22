@@ -60,7 +60,7 @@ class GeneratorTable extends Table{
             ->write('class '.$this->getClassName() . " extends ". $this->getExtendedClass())
             ->write('{')
             ->indent()
-                ->writeCallback(function(WriterInterface $writer, GeneratorTable $_this = null) use ($skipGetterAndSetter, $serializableEntity, $lifecycleCallbacks) {
+                ->writeCallback(function(WriterInterface $writer, GeneratorTable $_this = null) {
                     $_this->writePreClassHandler($writer);
 					
 					$writer->write("protected function _init_model() { ");
@@ -136,9 +136,6 @@ class GeneratorTable extends Table{
         $uses = array();
         if ($orm = $this->getOrmUse()) {
             $uses[] = $orm;
-        }
-        if (count($this->getTableM2MRelations()) || count($this->getAllLocalForeignKeys())) {
-            $uses[] = $this->getCollectionClass();
         }
 
         return $uses;
