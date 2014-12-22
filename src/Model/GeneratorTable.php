@@ -820,6 +820,7 @@ class GeneratorTable extends Table{
 	
 	public function getTableColumnsArray()
 	{
+		$converter = $this->getFormatter()->getDatatypeConverter();		
 		$return_value = array();
 		
         foreach ($this->getColumns() as $column) {
