@@ -739,7 +739,8 @@ class GeneratorTable extends Table{
 	{
 		$table_name_array = $this->getClassNameAsArray($base);
 		$namespace_array = explode("\\", trim($this->getEntityNamespace(), "\\"));
-		return array_merge($namespace_array, $table_name_array);		
+		array_push($namespace_array, $table_name_array[count($table_name_array) - 1]);				
+		return $namespace_array;		
 	}
 	
 	public function getClassNameAsArray($base = false)
