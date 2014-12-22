@@ -22,7 +22,6 @@ class Generator {
 	protected $model_extends = array();
 	
 	/**
-	 * 
 	 * @param string $basedir
 	 * @param string $namespace
 	 * @param string $mwb_filename
@@ -50,5 +49,10 @@ class Generator {
 			$this->set_model_extend($model_name, $class_name);
 		}
 	}	
+	
+	public function generate()
+	{
+		
+	}
 	
 }

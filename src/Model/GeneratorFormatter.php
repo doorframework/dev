@@ -12,10 +12,10 @@ use MwbExporter\Formatter\Doctrine2\Annotation\Formatter as BaseFormatter;
  *
  * @author serginho
  */
-class MysqlWorkbenchFormatter extends BaseFormatter{
+class GeneratorFormatter extends BaseFormatter{
 	
 	public function createTable(\MwbExporter\Model\Base $parent, $node) {
-		return new MysqlWorkbenchTable($parent, $node);
+		return new GeneratorTable($parent, $node);
 	}
 	
 	
