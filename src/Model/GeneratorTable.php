@@ -814,7 +814,7 @@ class GeneratorTable extends Table{
 	{
 		$writer->indent();						
 		$table_columns = var_export($this->getTableColumnsArray(), true);		
-		$writer->write("$this->_table_columns = {$table_columns};");
+		$writer->write("\$this->_table_columns = {$table_columns};");
 		$writer->outdent();
 	}
 	
