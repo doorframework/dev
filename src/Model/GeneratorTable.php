@@ -9,6 +9,7 @@ namespace Door\Dev\Model;
 use MwbExporter\Formatter\Doctrine2\Model\Table;
 use MwbExporter\Writer\Writer;
 use MwbExporter\Writer\WriterInterface;
+use MwbExporter\Formatter\Doctrine2\Annotation\Formatter;
 /**
  * Description of MysqlWorkbenchFormatter
  *
