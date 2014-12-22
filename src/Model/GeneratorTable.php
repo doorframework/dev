@@ -10,6 +10,7 @@ use MwbExporter\Formatter\Doctrine2\Model\Table;
 use MwbExporter\Writer\Writer;
 use MwbExporter\Writer\WriterInterface;
 use MwbExporter\Formatter\Doctrine2\Annotation\Formatter;
+use Doctrine\Common\Inflector\Inflector;
 /**
  * Description of MysqlWorkbenchFormatter
  *
@@ -748,6 +749,8 @@ class GeneratorTable extends Table{
 		{
 			array_unshift($table_name_array, "Base");
 		}
+		$table_name_array[count($table_name_array) - 1] = 
+				ucfirst(Inflector::singularize($table_name_array[count($table_name_array) - 1]));
 		return $table_name_array;
 	}
 	
