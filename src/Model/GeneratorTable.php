@@ -798,10 +798,15 @@ class GeneratorTable extends Table{
 	
 	public function writePropertiesComments(Writer $writer)
 	{
-		foreach(array(' * @param int $id',' * @param string $name') as $item)
-		{
-			$writer->write($item);
-		}
+		$converter = $this->getFormatter()->getDatatypeConverter();		
+		
+        foreach ($this->getColumns() as $column) {
+			/* @var $column MwbExporter\Model\Column */
+			$name = $column->getName();
+			$comment = $column->getComment();
+			$nativeType = $converter->getNativeType($converter->getMappedType($column));		
+			$writer->write(" * @param {$nativeType} {$name} $comment");			            
+        }		
 	}
 	
 	public function writeInitModel(Writer $writer)
