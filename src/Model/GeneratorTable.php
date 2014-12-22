@@ -813,7 +813,7 @@ class GeneratorTable extends Table{
 	{
 		$writer->indent();						
 		$table_columns = str_replace(array("\r","\n"), "", var_export($this->getTableColumnsArray(), true));		
-		$table_columns = preg_replace("/[ ]{2,100}/", "", $table_columns);
+		$table_columns = preg_replace("/[ ]{2,100}/", " ", $table_columns);
 		$writer->write("\$this->_table_columns = {$table_columns};");
 		$writer->outdent();
 	}
