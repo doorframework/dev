@@ -803,11 +803,7 @@ class GeneratorTable extends Table{
         foreach ($this->getColumns() as $column) {
 			/* @var $column MwbExporter\Model\Column */
 			$name = $column->getName();
-			$comment = trim($column->getComment());
-			if(strlen($comment) > 0)
-			{
-				$comment = substr($comment, 2);
-			}
+			$comment = trim($column->getComment()," \n\t\r*");
 			$nativeType = $converter->getNativeType($converter->getMappedType($column));		
 			$writer->write(" * @param {$nativeType} \${$name} $comment");			            
         }		
