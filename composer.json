@@ -1,0 +1,14 @@
+{
+	"name"	   :"door/dev",
+	"type"	   :"library",
+	"description":"Development tools for Door framework",
+	"license" : "MIT",
+	"autoload": {
+		"psr-4": {
+			"Door\\Dev\\": "src/"
+		}
+	},
+	"require": {
+		"mysql-workbench-schema-exporter/mysql-workbench-schema-exporter": "~2.1"
+	}
+}
