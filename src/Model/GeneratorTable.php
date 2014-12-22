@@ -87,7 +87,7 @@ class GeneratorTable extends Table{
                 ->write('/**')
                 ->write(' * '.$this->getModelName())
                 ->write(' */')
-                ->write('class %s extends %s', $this->getClassName(), "\\".$this->getEntityNamespace(true)."\\".$this->getClassName(true))
+                ->write('class %s extends %s', $this->getClassName(), "\\" . $this->getEntityNamespace(true) . "\\" . $this->getClassName(true))
                 ->write('{')
                 ->write('}')
                 ->close()
