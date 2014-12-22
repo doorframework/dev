@@ -54,6 +54,7 @@ class GeneratorTable extends Table{
             ->write('/**')
             ->write(' * '.$this->getModelName())
             ->write(' *')
+			->write(' */')
             ->writeCallback(function(WriterInterface $writer, GeneratorTable $_this = null) {
                 $_this->writePropertiesComments($writer);
             })
@@ -780,9 +781,8 @@ class GeneratorTable extends Table{
 		
 		$class_arr = $this->getClassNameAsArray();
 		if(count($class_arr) > 1)
-		{
-			array_shift($class_arr);
-			$namespace .= "\\".implode("\\", $class_arr);
+		{		
+			$namespace .= "\\".implode("\\", array_slice($class_arr, 0, count($class_arr) - 1));
 		}
 
         return $namespace;
