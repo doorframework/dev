@@ -842,6 +842,17 @@ class GeneratorTable extends Table{
 			$property_name = preg_replace('/_[^_]*$/', "", $localColumns[0]);				
 			$property_name = preg_replace("/{$this_table_singular}$/", $target_table, $property_name);
 			$writer->write(" * @param {$targetEntity} \${$property_name}");
+        }	
+		
+		foreach ($this->getTableM2MRelations() as $relation) {
+
+            $fk1 = $relation['reference'];
+			$refTable = $relation['refTable'];
+			$propertyName = $refTable->getRawTableName();			
+            $fk2 = $fk1->getOwningTable()->getRelationToTable($refTable->getRawTableName());
+			$targetEntity = "\\".implode("\\", $refTable->getFullClassNameAsArray());	
+			
+			$writer->write(" * @param {$targetEntity} \${$propertyName}");		
         }		
 	}
 	
@@ -913,6 +924,26 @@ class GeneratorTable extends Table{
 			);
 					
         }		
+		
+		foreach ($this->getTableM2MRelations() as $relation) {
+
+            $fk1 = $relation['reference'];
+			$refTable = $relation['refTable'];
+			$propertyName = $refTable->getRawTableName();			
+            $fk2 = $fk1->getOwningTable()->getRelationToTable($refTable->getRawTableName());
+			$targetModel = $refTable->getModelName();
+			
+			$foreigns1 = $fk1->getLocalColumns();
+			$foreigns2 = $fk2->getLocalColumns();
+			
+			$return_value[$propertyName] = array(
+				"model" => $targetModel,
+				"throught" => $fk1->getOwningTable()->getRawTableName(),
+				"far_key" => $foreigns2[0],
+				"foreign_key" => $foreigns1[0]
+			);			
+        }
+		
 		
 		return $return_value;
 	}
