@@ -14,14 +14,14 @@ use MwbExporter\Formatter\Doctrine2\Annotation\Formatter as BaseFormatter;
  */
 class GeneratorFormatter extends BaseFormatter{
 	
-	public function __construct($name = null) {
+	public function __construct($name = null) {		
+		
+		parent::__construct($name);
 		
 		$this->addConfigurations(array(
 			Generator::CFG_DEFAULT_EXTEND_CLASSNAME => "\\Door\\ORM\\Model",
-			Generator::CFG_EXTEND_ClASSES => null
-		));	
-		
-		parent::__construct($name);
+			Generator::CFG_EXTEND_ClASSES => array()
+		));		
 		
 	}
 	
