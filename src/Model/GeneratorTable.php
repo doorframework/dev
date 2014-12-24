@@ -384,7 +384,7 @@ class GeneratorTable extends Table{
 			$propertyName = preg_replace('/_[^_]*$/', "", $localColumns[0]);
 					
 			
-            $targetEntity = $foreign->getOwningTable()->getModelName();			
+            $targetEntity = $foreign->getReferencedTable()->getModelName();			
 			$return_value[$propertyName] = array(
 				'model' => $targetEntity,
 				'foreign_key' => $localColumns[0]
