@@ -67,7 +67,8 @@ class GeneratorTable extends Table{
             ->write('{')
             ->indent()
 				->write("protected \$_table_name = '{$table}';")
-				->write("protected \$_primary_key = '{$table}';")
+				->write("protected \$_primary_key = '{$primary_key}';")
+				->write('')
                 ->writeCallback(function(WriterInterface $writer, GeneratorTable $_this = null) {                   					
 					$_this->writeInitModel($writer);					
                 })
