@@ -841,7 +841,6 @@ class GeneratorTable extends Table{
 			$target_table = $local->getOwningTable()->getRawTableName();			
 			$property_name = preg_replace('/_[^_]*$/', "", $localColumns[0]);				
 			$property_name = preg_replace("/{$this_table_singular}$/", $target_table, $property_name);
-			$property_name = preg_replace("/^{$this_table_singular}_/", "", $property_name);						
 			$writer->write(" * @param {$targetEntity} \${$property_name}");
         }		
 	}
@@ -907,7 +906,6 @@ class GeneratorTable extends Table{
 			$target_table = $local->getOwningTable()->getRawTableName();			
 			$property_name = preg_replace('/_[^_]*$/', "", $localColumns[0]);				
 			$property_name = preg_replace("/{$this_table_singular}$/", $target_table, $property_name);						
-			$property_name = preg_replace("/^{$this_table_singular}_/", "", $property_name);						
 			
 			$return_value[$property_name] = array(
 				'model' => $targetEntity,
