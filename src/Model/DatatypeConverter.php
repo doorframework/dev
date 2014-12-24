@@ -120,11 +120,12 @@ class DatatypeConverter extends BaseDatatypeConverter
                 break;
 
             case 'text':
-            case 'blob':
+            case 'blob':		
                 $type = 'string';
                 break;
 
             default:
+				$type = 'string';
                 break;
         }
 		echo $type."\n";
