@@ -39,6 +39,14 @@ class GeneratorTable extends Table{
         $this->getDocument()->addLog(sprintf('Writing table "%s"', $this->getModelName()));
 
         $namespace = $this->getEntityNamespace(true);
+		$table = $this->getRawTableName();
+		$primary_key = $this->getPrimaryKey();
+		
+		if($primary_key == null)
+		{
+			return;
+		}
+	
 		
         $writer
             ->open($this->getClassFileName(true))
@@ -58,10 +66,10 @@ class GeneratorTable extends Table{
             ->write('class '.$this->getClassName() . " extends ". $this->getExtendedClass())
             ->write('{')
             ->indent()
+				->write("\$_table_name = '{$table}';")
+				->write("\$_primary_key = '{$table}';")
                 ->writeCallback(function(WriterInterface $writer, GeneratorTable $_this = null) {                   					
-					$writer->write("protected function _init_model() { ");
-					$_this->writeInitModel($writer);
-					$writer->write("}");
+					$_this->writeInitModel($writer);					
                 })
             ->outdent()
             ->write('}')
@@ -180,7 +188,26 @@ class GeneratorTable extends Table{
 	
 	public function getExtendedClass()
 	{
-		return "\\Door\\ORM\\Model";
+		$return_value = null;
+		
+		$current_model = $this->getModelName();
+		$model_extends_config = $this->getConfig()->get(Generator::CFG_EXTEND_ClASSES);
+		$default_model_config = $this->getConfig()->get(Generator::CFG_DEFAULT_EXTEND_CLASSNAME);
+		
+		if(is_array($model_extends_config) && isset($model_extends_config[$current_model]))
+		{
+			$return_value = $model_extends_config[$current_model];
+		}
+		elseif($default_model_config != null)
+		{
+			$return_value = $default_model_config;
+		}
+		else
+		{
+			throw new Exeption("Default model config not found.");
+		}
+		
+		return $return_value;
 	}
 	
 	public function writePropertiesComments(Writer $writer)
@@ -244,9 +271,11 @@ class GeneratorTable extends Table{
 	
 	public function writeInitModel(Writer $writer)
 	{
+		$writer->write("protected function _init_model() { ");
 		$writer->indent();	
 		$this->writeInitModelTableColumns($writer);
 		$writer->outdent();	
+		$writer->write("}");
 	}
 	
 	public function writeInitModelTableColumns(Writer $writer)
@@ -358,6 +387,29 @@ class GeneratorTable extends Table{
 				'foreign_key' => $localColumns[0]
 			);			
         }			
+		
+		return $return_value;
+	}
+	
+	public function getPrimaryKey()
+	{
+		$return_value = null;
+		
+        foreach ($this->getColumns() as $column) {			
+			/* @var $column \MwbExporter\Model\Column */
+			if($column->isPrimary())
+			{
+				if($return_value == null)
+				{
+					$return_value = $column->getName();
+				}
+				else
+				{
+					//return null if there is two primary keys
+					return null;
+				}
+			}
+        }		
 		
 		return $return_value;
 	}

@@ -1,24 +1,24 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 namespace Door\Dev\Model;
 use \MwbExporter\Formatter\Doctrine2\Annotation\Formatter;
+
 /**
- * Description of Generator
- *
- * @author serginho
+ * Model generator for Door framework
  */
 class Generator {
+	
+	const CFG_DEFAULT_EXTEND_CLASSNAME = "defaultExtendClassname";
+	const CFG_EXTEND_ClASSES = "extendClasses";	
+	
+	protected $defaultExtendClassname = "\\Door\\ORM\\Model";
 	
 	protected $basedir;
 	
 	protected $namespace;
 		
-	protected $mwb_filename;
+	protected $mwb_filename;		
 	
 	protected $model_extends = array();
 	
@@ -51,22 +51,14 @@ class Generator {
 		}
 	}	
 	
+	public function set_default_extend_classname($class)
+	{
+		$this->defaultExtendClassname = $class;
+	}
+	
 	public function generate()
 	{
-		$bootstrap = new \MwbExporter\Bootstrap();
-
-		$formatter = new GeneratorFormatter();
-		$formatter->setup(array(
-			Formatter::CFG_ADD_COMMENT => false,
-			Formatter::CFG_GENERATE_EXTENDABLE_ENTITY => true,
-			Formatter::CFG_BACKUP_FILE => false,
-			Formatter::CFG_ENTITY_NAMESPACE => $this->namespace,
-			Formatter::CFG_AUTOMATIC_REPOSITORY => true,
-			Formatter::CFG_SKIP_GETTER_SETTER => false,
-			Formatter::CFG_GENERATE_ENTITY_SERIALIZATION => true
-		));
-
-		$document = $bootstrap->export($formatter, $this->mwb_filename, $this->basedir);
+		$document = $this->export();
 
 		if($document == null)
 		{
@@ -76,6 +68,20 @@ class Generator {
 		{
 			return true;
 		}		
+	}
+	
+	private function export()
+	{
+		$bootstrap = new \MwbExporter\Bootstrap();
+
+		$formatter = new GeneratorFormatter();
+		$formatter->setup(array(
+			Formatter::CFG_ENTITY_NAMESPACE => $this->namespace,
+			self::CFG_EXTEND_ClASSES => $this->model_extends,
+			self::CFG_DEFAULT_EXTEND_CLASSNAME => $this->defaultExtendClassname
+		));
+
+		return $bootstrap->export($formatter, $this->mwb_filename, $this->basedir);		
 	}
 	
 }
