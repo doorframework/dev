@@ -41,6 +41,7 @@ class GeneratorTable extends Table{
         $namespace = $this->getEntityNamespace(true);
 		$table = $this->getRawTableName();
 		$primary_key = $this->getPrimaryKey();
+		$model_name = $this->getModelName();
 		
 		if($primary_key == null)
 		{
@@ -57,7 +58,7 @@ class GeneratorTable extends Table{
             ->write(' */')
             ->write('namespace %s;', $namespace)
             ->write('/**')
-            ->write(' * '.$this->getModelName())
+            ->write(' * '.$model_name)
             ->write(' *')			
             ->writeCallback(function(WriterInterface $writer, GeneratorTable $_this = null) {
                 $_this->writePropertiesComments($writer);
@@ -68,6 +69,7 @@ class GeneratorTable extends Table{
             ->indent()
 				->write("protected \$_table_name = '{$table}';")
 				->write("protected \$_primary_key = '{$primary_key}';")
+				->write("protected \$_object_name = '{$model_name}';")
 				->write('')
                 ->writeCallback(function(WriterInterface $writer, GeneratorTable $_this = null) {                   					
 					$_this->writeInitModel($writer);					
