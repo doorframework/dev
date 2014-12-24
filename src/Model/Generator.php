@@ -77,6 +77,7 @@ class Generator {
 		$formatter = new GeneratorFormatter();
 		$formatter->setup(array(
 			Formatter::CFG_ENTITY_NAMESPACE => $this->namespace,
+			Formatter::CFG_BACKUP_FILE => false,
 			self::CFG_EXTEND_ClASSES => $this->model_extends,
 			self::CFG_DEFAULT_EXTEND_CLASSNAME => $this->defaultExtendClassname
 		));

@@ -53,7 +53,7 @@ class GeneratorTable extends Table{
             ->write('<?php')
             ->write('')
             ->write('/**')
-            ->write(' * This file generated automatically')
+            ->write(' * This file generated automatically. You should not change this file.')
             ->write(' */')
             ->write('namespace %s;', $namespace)
             ->write('/**')
@@ -66,8 +66,8 @@ class GeneratorTable extends Table{
             ->write('class '.$this->getClassName() . " extends ". $this->getExtendedClass())
             ->write('{')
             ->indent()
-				->write("\$_table_name = '{$table}';")
-				->write("\$_primary_key = '{$table}';")
+				->write("protected \$_table_name = '{$table}';")
+				->write("protected \$_primary_key = '{$table}';")
                 ->writeCallback(function(WriterInterface $writer, GeneratorTable $_this = null) {                   					
 					$_this->writeInitModel($writer);					
                 })
