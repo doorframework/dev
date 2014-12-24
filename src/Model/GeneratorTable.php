@@ -836,7 +836,11 @@ class GeneratorTable extends Table{
 			{
 				continue;
 			}
+			
+			$this_table_singular = Inflector::singularize($this->getRawTableName());
+			$target_table = $local->getOwningTable()->getRawTableName();			
 			$property_name = preg_replace('/_[^_]*$/', "", $localColumns[0]);				
+			$property_name = preg_replace("/{$this_table_singular}$/", $target_table, $property_name);				
 			$writer->write(" * @param {$targetEntity} \${$property_name}");
         }		
 	}
@@ -898,7 +902,10 @@ class GeneratorTable extends Table{
 				continue;
 			}
 			
+			$this_table_singular = Inflector::singularize($this->getRawTableName());
+			$target_table = $local->getOwningTable()->getRawTableName();			
 			$property_name = preg_replace('/_[^_]*$/', "", $localColumns[0]);				
+			$property_name = preg_replace("/{$this_table_singular}$/", $target_table, $property_name);						
 			
 			$return_value[$property_name] = array(
 				'model' => $targetEntity,
@@ -928,7 +935,7 @@ class GeneratorTable extends Table{
 			$propertyName = preg_replace('/_[^_]*$/', "", $localColumns[0]);
 					
 			
-            $targetEntity = "\\".implode("\\", $foreign->getReferencedTable()->getFullClassNameAsArray());			
+            $targetEntity = $local->getOwningTable()->getModelName();			
 			$return_value[$propertyName] = array(
 				'model' => $targetEntity,
 				'foreign_key' => $localColumns[0]
