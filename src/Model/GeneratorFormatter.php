@@ -29,5 +29,11 @@ class GeneratorFormatter extends BaseFormatter{
 		return new GeneratorTable($parent, $node);
 	}
 	
+	public function createDatatypeConverter() {
+		
+		return new DatatypeConverter();
+		
+	}
+	
 	
 }
