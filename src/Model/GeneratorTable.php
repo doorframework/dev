@@ -48,10 +48,6 @@ class GeneratorTable extends Table{
             ->write(' * This file generated automatically')
             ->write(' */')
             ->write('namespace %s;', $namespace)
-            ->write('')
-            ->writeCallback(function(WriterInterface $writer, Table $_this = null) {
-                $_this->writeUsedClasses($writer);
-            })
             ->write('/**')
             ->write(' * '.$this->getModelName())
             ->write(' *')			
@@ -62,9 +58,7 @@ class GeneratorTable extends Table{
             ->write('class '.$this->getClassName() . " extends ". $this->getExtendedClass())
             ->write('{')
             ->indent()
-                ->writeCallback(function(WriterInterface $writer, GeneratorTable $_this = null) {
-                    $_this->writePreClassHandler($writer);
-					
+                ->writeCallback(function(WriterInterface $writer, GeneratorTable $_this = null) {                   					
 					$writer->write("protected function _init_model() { ");
 					$_this->writeInitModel($writer);
 					$writer->write("}");
@@ -123,7 +117,7 @@ class GeneratorTable extends Table{
      *
      * @return string
      */
-    protected function getOrmUse()
+    protected function getOrmUse1()
     {
 		return '';
     }
@@ -133,7 +127,7 @@ class GeneratorTable extends Table{
      *
      * @return array
      */
-    protected function getUsedClasses()
+    protected function getUsedClasses1()
     {
         $uses = array();
         if ($orm = $this->getOrmUse()) {
@@ -143,7 +137,7 @@ class GeneratorTable extends Table{
         return $uses;
     }
 
-    protected function getInheritanceDiscriminatorColumn()
+    protected function getInheritanceDiscriminatorColumn1()
     {
         $result = array();
         if ($column = trim($this->parseComment('discriminator'))) {
@@ -162,19 +156,19 @@ class GeneratorTable extends Table{
         return $result;
     }
 
-    protected function getInheritanceDiscriminatorMap()
+    protected function getInheritanceDiscriminatorMap1()
     {
         return array('base' => $this->getClassName(true), 'extended' => $this->getClassName());
     }
 
-    public function writeUsedClasses(WriterInterface $writer)
+    public function writeUsedClasses1(WriterInterface $writer)
     {
         $this->writeUses($writer, $this->getUsedClasses());
 
         return $this;
     }
 
-    public function writeExtendedUsedClasses(WriterInterface $writer)
+    public function writeExtendedUsedClasses1(WriterInterface $writer)
     {
         $uses = array();
         if ($orm = $this->getOrmUse()) {
@@ -186,7 +180,7 @@ class GeneratorTable extends Table{
         return $this;
     }
 
-    protected function writeUses(WriterInterface $writer, $uses = array())
+    protected function writeUses1(WriterInterface $writer, $uses = array())
     {
         if (count($uses)) {
             foreach ($uses as $use) {
@@ -204,7 +198,7 @@ class GeneratorTable extends Table{
      * @param \MwbExporter\Writer\WriterInterface $writer
      * @return \MwbExporter\Formatter\Doctrine2\Annotation\Model\Table
      */
-    public function writePreClassHandler(WriterInterface $writer)
+    public function writePreClassHandler1(WriterInterface $writer)
     {
         return $this;
     }
@@ -218,14 +212,14 @@ class GeneratorTable extends Table{
         return $this;
     }
 
-    protected function writeColumnsVar(WriterInterface $writer)
+    protected function writeColumnsVar1(WriterInterface $writer)
     {
         foreach ($this->getColumns() as $column) {
             $column->writeVar($writer);
         }
     }
 
-    protected function writeRelationsVar(WriterInterface $writer)
+    protected function writeRelationsVar1(WriterInterface $writer)
     {
         // 1 <=> N references
         foreach ($this->getAllLocalForeignKeys() as $local) {
@@ -336,7 +330,7 @@ class GeneratorTable extends Table{
         return $this;
     }
 
-    protected function writeManyToManyVar(WriterInterface $writer)
+    protected function writeManyToManyVar1(WriterInterface $writer)
     {
         foreach ($this->getTableM2MRelations() as $relation) {
             $this->getDocument()->addLog(sprintf('  Writing setter/getter for N <=> N "%s"', $relation['refTable']->getModelName()));
@@ -402,7 +396,7 @@ class GeneratorTable extends Table{
         return $this;
     }
 
-    public function writeConstructor(WriterInterface $writer)
+    public function writeConstructor1(WriterInterface $writer)
     {
         $writer
             ->write('public function __construct()')
@@ -420,7 +414,7 @@ class GeneratorTable extends Table{
         return $this;
     }
 
-    public function writeRelationsConstructor(WriterInterface $writer)
+    public function writeRelationsConstructor1(WriterInterface $writer)
     {
         foreach ($this->getAllLocalForeignKeys() as $local) {
             if ($this->isLocalForeignKeyIgnored($local)) {
@@ -433,7 +427,7 @@ class GeneratorTable extends Table{
         }
     }
 
-    public function writeManyToManyConstructor(WriterInterface $writer)
+    public function writeManyToManyConstructor1(WriterInterface $writer)
     {
         foreach ($this->getTableM2MRelations() as $relation) {
             $this->getDocument()->addLog(sprintf('  Writing M2M constructor "%s"', $relation['refTable']->getModelName()));
@@ -441,7 +435,7 @@ class GeneratorTable extends Table{
         }
     }
 
-    public function writeGetterAndSetter(WriterInterface $writer)
+    public function writeGetterAndSetter1(WriterInterface $writer)
     {
         $this->writeColumnsGetterAndSetter($writer);
         $this->writeRelationsGetterAndSetter($writer);
@@ -450,14 +444,14 @@ class GeneratorTable extends Table{
         return $this;
     }
 
-    protected function writeColumnsGetterAndSetter(WriterInterface $writer)
+    protected function writeColumnsGetterAndSetter1(WriterInterface $writer)
     {
         foreach ($this->getColumns() as $column) {
             $column->writeGetterAndSetter($writer);
         }
     }
 
-    protected function writeRelationsGetterAndSetter(WriterInterface $writer)
+    protected function writeRelationsGetterAndSetter1(WriterInterface $writer)
     {
         // N <=> 1 references
         foreach ($this->getAllLocalForeignKeys() as $local) {
@@ -643,7 +637,7 @@ class GeneratorTable extends Table{
         return $this;
     }
 
-    protected function writeManyToManyGetterAndSetter(WriterInterface $writer)
+    protected function writeManyToManyGetterAndSetter1(WriterInterface $writer)
     {
         foreach ($this->getTableM2MRelations() as $relation) {
             $this->getDocument()->addLog(sprintf('  Writing N <=> N relation "%s"', $relation['refTable']->getModelName()));
@@ -714,12 +708,12 @@ class GeneratorTable extends Table{
      * @param \MwbExporter\Writer\WriterInterface $writer
      * @return \MwbExporter\Formatter\Doctrine2\Annotation\Model\Table
      */
-    public function writePostClassHandler(WriterInterface $writer)
+    public function writePostClassHandler1(WriterInterface $writer)
     {
         return $this;
     }
 
-    public function writeSerialization(WriterInterface $writer)
+    public function writeSerialization1(WriterInterface $writer)
     {
         $writer
             ->write('public function __sleep()')
