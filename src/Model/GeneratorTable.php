@@ -825,15 +825,43 @@ class GeneratorTable extends Table{
             $targetEntity = "\\".implode("\\", $foreign->getReferencedTable()->getFullClassNameAsArray());			
 			$writer->write(" * @param {$targetEntity} \${$propertyName}");           
         }		
+		
+		foreach ($this->getAllLocalForeignKeys() as $local) {
+            if ($this->isLocalForeignKeyIgnored($local)) {
+                continue;
+            }
+			$targetEntity = "\\".implode("\\", $local->getOwningTable()->getFullClassNameAsArray());			
+			$localColumns = $foreign->getLocalColumns();			
+			if(count($localColumns) != 1)
+			{
+				continue;
+			}
+			$property_name = preg_replace('/_[^_]*$/', "", $localColumns[0]);				
+			$writer->write(" * @param {$targetEntity} \${$property_name}");
+        }		
 	}
 	
 	public function writeInitModel(Writer $writer)
 	{
-		$writer->indent();						
-		$table_columns = str_replace(array("\r","\n"), "", var_export($this->getTableColumnsArray(), true));		
-		$table_columns = preg_replace("/[ ]{2,100}/", " ", $table_columns);
-		$writer->write("\$this->_table_columns = {$table_columns};");
-		$writer->outdent();
+		$writer->indent();	
+		$this->writeInitModelTableColumns($writer);
+		$writer->outdent();	
+	}
+	
+	public function writeInitModelTableColumns(Writer $writer)
+	{							
+		$table_columns = $this->export_var($this->getTableColumnsArray());
+		$has_many = $this->export_var($this->getHasManyArray());
+		$has_one = $this->export_var($this->getHasOneArray());
+		$writer->write("\$this->_table_columns = {$table_columns};");			
+		$writer->write("\$this->_has_many = {$has_many};");			
+		$writer->write("\$this->_has_one = {$has_one};");			
+	}
+	
+	protected function export_var(array $values)
+	{
+		$text = str_replace(array("\r","\n"), "", var_export($values, true));
+		return preg_replace("/[ ]{2,100}/", " ", $text);
 	}
 	
 	public function getTableColumnsArray()
@@ -850,8 +878,62 @@ class GeneratorTable extends Table{
 				'type' => $nativeType
 			);
         }				
+		return $return_value;
+	}
+	
+	protected function getHasManyArray()
+	{
+		$return_value = array();
 		
+		foreach ($this->getAllLocalForeignKeys() as $local) {
+            if ($this->isLocalForeignKeyIgnored($local)) {
+                continue;
+            }
+
+            $targetEntity = $local->getOwningTable()->getModelName();
+			$localColumns = $local->getLocalColumns();
+			
+			if(count($localColumns) != 1)
+			{
+				continue;
+			}
+			
+			$property_name = preg_replace('/_[^_]*$/', "", $localColumns[0]);				
+			
+			$return_value[$property_name] = array(
+				'model' => $targetEntity,
+				'foreign_key' => $localColumns[0]
+			);
+					
+        }		
 		
+		return $return_value;
+	}
+		
+	protected function getHasOneArray()
+	{
+		$return_value = array();
+		
+        foreach ($this->getAllForeignKeys() as $foreign) {
+            if ($this->isForeignKeyIgnored($foreign)) {
+                continue;
+            }
+
+			$localColumns = $foreign->getLocalColumns();
+			if(count($localColumns) != 1)
+			{
+				continue;
+			}
+			
+			$propertyName = preg_replace('/_[^_]*$/', "", $localColumns[0]);
+					
+			
+            $targetEntity = "\\".implode("\\", $foreign->getReferencedTable()->getFullClassNameAsArray());			
+			$return_value[$propertyName] = array(
+				'model' => $targetEntity,
+				'foreign_key' => $localColumns[0]
+			);			
+        }			
 		
 		return $return_value;
 	}
