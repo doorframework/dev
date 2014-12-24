@@ -831,7 +831,7 @@ class GeneratorTable extends Table{
                 continue;
             }
 			$targetEntity = "\\".implode("\\", $local->getOwningTable()->getFullClassNameAsArray());			
-			$localColumns = $foreign->getLocalColumns();			
+			$localColumns = $local->getLocalColumns();			
 			if(count($localColumns) != 1)
 			{
 				continue;
