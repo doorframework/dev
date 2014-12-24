@@ -93,7 +93,6 @@ class DatatypeConverter extends BaseDatatypeConverter
 
     public function getNativeType($type)
     {
-		echo $type." ";
         switch ($type) {
             case 'array':
             case 'boolean':
@@ -128,7 +127,6 @@ class DatatypeConverter extends BaseDatatypeConverter
 				$type = 'string';
                 break;
         }
-		echo $type."\n";
 
         return $type;
     }
