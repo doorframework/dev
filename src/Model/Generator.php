@@ -22,6 +22,8 @@ class Generator {
 	
 	protected $model_extends = array();
 	
+	protected $init_scripts_filename = null;
+	
 	/**
 	 * @param string $basedir
 	 * @param string $namespace
@@ -50,6 +52,11 @@ class Generator {
 			$this->set_model_extend($model_name, $class_name);
 		}
 	}	
+	
+	public function set_init_scripts_filename($filename)
+	{
+		$this->init_scripts_filename = $filename;
+	}
 	
 	public function set_default_extend_classname($class)
 	{
@@ -81,8 +88,37 @@ class Generator {
 			self::CFG_EXTEND_ClASSES => $this->model_extends,
 			self::CFG_DEFAULT_EXTEND_CLASSNAME => $this->defaultExtendClassname
 		));
+		
+		$doc = $bootstrap->export($formatter, $this->mwb_filename, $this->basedir);		
+		if($this->init_scripts_filename != null)
+		{
+			$this->export_init_script($doc);
+		}		
 
-		return $bootstrap->export($formatter, $this->mwb_filename, $this->basedir);		
+		return $doc;
+	}
+	
+	private function export_init_script(\MwbExporter\Model\Document $doc)
+	{
+		$init_array = array();
+		
+		foreach($doc->getPhysicalModel()->getCatalog()->getSchemas() as $schema)
+		{
+			/*@var $schema \MwbExporter\Model\Schema */
+			foreach($schema->getTables() as $table)
+			{
+				/*@var $table GeneratorTable */
+				$class_name = $table->getFullClassNameAsArray();
+				$model_name = $table->getModelName();
+				$init_array[$model_name] = $class_name;
+			}
+		}	
+		
+		$out = array();
+		$out[] = "<?php";
+		$out[] = "/*@var \$storage \\Door\\ORM\\Storage */";
+		$out[] = "\$storage->register_models(".var_export($init_array).");";
+		file_put_contents($this->init_scripts_filename, join("\n", $out));				
 	}
 	
 }
