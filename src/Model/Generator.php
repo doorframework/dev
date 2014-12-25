@@ -117,7 +117,7 @@ class Generator {
 		$out = array();
 		$out[] = "<?php";
 		$out[] = "/*@var \$storage \\Door\\ORM\\Storage */";
-		$out[] = "\$storage->register_models(".var_export($init_array).");";
+		$out[] = "\$storage->register_models(".var_export($init_array, true).");";
 		file_put_contents($this->init_scripts_filename, join("\n", $out));				
 	}
 	
