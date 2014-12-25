@@ -108,7 +108,7 @@ class Generator {
 			foreach($schema->getTables() as $table)
 			{
 				/*@var $table GeneratorTable */
-				$class_name = $table->getFullClassNameAsArray();
+				$class_name = "\\".implode("\\", $table->getFullClassNameAsArray());
 				$model_name = $table->getModelName();
 				$init_array[$model_name] = $class_name;
 			}
